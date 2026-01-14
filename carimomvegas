@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cari & Mom Las Vegas Getaway</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0b0c10;
+      color: #f5f5f5;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar navigation */
+
+    .sidebar {
+      width: 260px;
+      background: radial-gradient(circle at top left, #1f2833, #0b0c10);
+      padding: 24px 18px;
+      border-right: 1px solid #202633;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .sublogo {
+      font-size: 12px;
+      color: #9ea6bc;
+      margin-bottom: 18px;
+    }
+
+    .trip-meta {
+      font-size: 12px;
+      color: #b5bed4;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .nav-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6d7489;
+      margin-bottom: 8px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav button {
+      border: none;
+      background: transparent;
+      color: #d7def6;
+      text-align: left;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav button span.icon {
+      font-size: 16px;
+    }
+
+    .nav button.active {
+      background: linear-gradient(135deg, #1f4068, #162447);
+      color: #ffffff;
+    }
+
+    .nav button:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .note {
+      margin-top: 24px;
+      font-size: 11px;
+      color: #707792;
+      line-height: 1.5;
+    }
+
+    /* Main content */
+
+    .main {
+      flex: 1;
+      padding: 22px 24px 32px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 0 0 4px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 18px 0 8px;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin: 14px 0 6px;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 6px 0;
+      color: #dde3ff;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 18px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #c4ccf0;
+    }
+
+    /* Itinerary day cards */
+
+    .day-card {
+      border-radius: 12px;
+      border: 1px solid #252d3c;
+      background: radial-gradient(circle at top right, rgba(100, 149, 237, 0.1), rgba(10, 12, 20, 0.95));
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .day-header {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .day-header-main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .day-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .day-subtitle {
+      font-size: 12px;
+      color: #a4acc7;
+    }
+
+    .day-toggle {
+      font-size: 18px;
+      color: #9da7c8;
+    }
+
+    .day-body {
+      padding: 10px 14px 12px;
+      border-top: 1px solid #202633;
+      display: none;
+    }
+
+    .day-body.open {
+      display: block;
+    }
+
+    .slot {
+      margin-bottom: 10px;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #9ea6bc;
+    }
+
+    .title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 1px;
+    }
+
+    .why {
+      font-size: 13px;
+      color: #c9d2f3;
+    }
+
+    /* Simple pills for alternative times */
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid #3c445a;
+      color: #c4ccf0;
+      cursor: default;
+    }
+
+    /* Two column layout helpers */
+
+    .columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .panel {
+      border-radius: 12px;
+      border: 1px solid #252d3c;
+      background: radial-gradient(circle at top right, rgba(48, 109, 255, 0.08), rgba(11, 13, 22, 0.98));
+      padding: 10px 12px 12px;
+    }
+
+    .panel h3 {
+      margin-top: 2px;
+    }
+
+    ul {
+      padding-left: 16px;
+      margin: 4px 0 6px;
+    }
+
+    li {
+      font-size: 13px;
+      color: #dde3ff;
+      margin-bottom: 3px;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #a4acc7;
+    }
+
+    /* Collapsible blocks inside sections */
+
+    .accordion {
+      border-radius: 10px;
+      border: 1px solid #252d3c;
+      background: #0f111a;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      padding: 8px 10px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .accordion-header span.label {
+      font-weight: 500;
+    }
+
+    .accordion-header span.chevron {
+      font-size: 16px;
+      color: #9da7c8;
+    }
+
+    .accordion-body {
+      padding: 8px 10px 10px;
+      border-top: 1px solid #202633;
+      display: none;
+    }
+
+    .accordion-body.open {
+      display: block;
+    }
+
+    .highlight {
+      color: #ffdf7e;
+    }
+
+    a {
+      color: #95b8ff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 880px) {
+      .app {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #202633;
+      }
+      .main {
+        padding: 16px 14px 24px;
+      }
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">Cari & Mom Vegas</div>
+    <div class="sublogo">Curated getaway planner</div>
+    <div class="trip-meta">
+      Base hotel: Club Wyndham Grand Desert<br />
+      Vibe: Late mornings, wine, ambience, shows<br />
+      Focus: Sphere, Cirque, Old Vegas, great food
+    </div>
+
+    <div class="nav-title">Sections</div>
+    <div class="nav">
+      <button class="nav-btn active" data-target="overview">
+        <span class="icon">🌆</span><span>Overview</span>
+      </button>
+      <button class="nav-btn" data-target="itinerary">
+        <span class="icon">🗓️</span><span>Daily itinerary</span>
+      </button>
+      <button class="nav-btn" data-target="tickets">
+        <span class="icon">🎟️</span><span>Tickets and showtimes</span>
+      </button>
+      <button class="nav-btn" data-target="brunch">
+        <span class="icon">🥂</span><span>Brunch and dining</span>
+      </button>
+      <button class="nav-btn" data-target="spa">
+        <span class="icon">💆</span><span>Spa deals</span>
+      </button>
+      <button class="nav-btn" data-target="neon">
+        <span class="icon">🪩</span><span>Neon Museum and maps</span>
+      </button>
+      <button class="nav-btn" data-target="extras">
+        <span class="icon">✨</span><span>Unique add ons</span>
+      </button>
+    </div>
+
+    <div class="note">
+      Tip: Save this file on your phone or laptop and use it as your live guide in Las Vegas.
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- Overview -->
+    <section id="overview" class="section active">
+      <h1>Cari and Mom Las Vegas Getaway</h1>
+      <p>
+        This page pulls together the full trip plan for Cari and her mother:
+        Sphere, Cirque du Soleil, Old Vegas, Mon Ami Gabi brunch, spa ideas,
+        and extra experiences. The layout is built for quick reference on a phone
+        while you are in town.
+      </p>
+
+      <div class="tag-row">
+        <div class="tag">Late mornings</div>
+        <div class="tag">Wine and ambience</div>
+        <div class="tag">Sightseeing and shows</div>
+        <div class="tag">Unique shopping</div>
+        <div class="tag">Neon and Old Vegas</div>
+      </div>
+
+      <h2>Trip snapshot</h2>
+      <p>
+        Hotel: Club Wyndham Grand Desert, just off the Strip. This keeps nights
+        quiet but makes rideshare to the Strip and downtown fast and inexpensive.
+      </p>
+      <p>
+        Core anchors:
+      </p>
+      <ul>
+        <li>Postcard from Earth at the Sphere</li>
+        <li>O by Cirque du Soleil at Bellagio</li>
+        <li>Mad Apple by Cirque du Soleil at New York New York</li>
+        <li>Old Vegas and Fremont Street</li>
+        <li>Farewell brunch at Mon Ami Gabi with Bellagio fountain views</li>
+      </ul>
+
+      <h2>How to use this site</h2>
+      <p>
+        1. Open the Daily itinerary tab for a day by day run through with timing and why each choice was made.
+      </p>
+      <p>
+        2. Open Tickets and showtimes for where to buy seats, pricing strategy, and alternative showtimes.
+      </p>
+      <p>
+        3. Open Brunch and dining for Mon Ami Gabi, backup brunch spots, and what to order.
+      </p>
+      <p>
+        4. Open Spa deals for realistic discounted spa ideas that still feel nice.
+      </p>
+      <p>
+        5. Open Neon Museum and maps to see where the Neon Museum fits relative to Old Vegas and the Strip.
+      </p>
+      <p>
+        6. Open Unique add ons for extra experiences if they have energy and want more memories.
+      </p>
+    </section>
+
+    <!-- Itinerary -->
+    <section id="itinerary" class="section">
+      <h2>Daily itinerary</h2>
+      <p>
+        Times are approximate. The idea is smooth flow and built in breathing room,
+        not a forced schedule. Tap a day to expand or collapse it.
+      </p>
+
+      <!-- Day 1 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-header-main">
+            <div class="day-title">Day 1 — Arrival and Sphere night</div>
+            <div class="day-subtitle">Arrive, settle in, wine, Sphere, early finish</div>
+          </div>
+          <div class="day-toggle">▾</div>
+        </div>
+        <div class="day-body open">
+          <div class="slot">
+            <div class="time">3:00 pm to 4:30 pm</div>
+            <div class="title">Arrive and check in at Club Wyndham Grand Desert</div>
+            <div class="why">
+              Drop bags, freshen up, and get a feel for the property. Being just off-strip
+              keeps the room quiet while still being a short rideshare away from everything.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">5:30 pm</div>
+            <div class="title">Head toward Resorts World and the Sphere area</div>
+            <div class="why">
+              Rideshare to Resorts World. This gives them a relaxed lead-in to the evening,
+              and puts them close to the Sphere without rushing.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">6:00 pm to 7:15 pm</div>
+            <div class="title">Wine and small plates at Wally’s, Resorts World</div>
+            <div class="why">
+              Wally’s is built around wine, charcuterie, and upscale bites, in a lively but
+              not overwhelming room. It is ideal for a wine loving mother and daughter pair
+              before the biggest visual show in town.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">7:30 pm to about 9:15 pm</div>
+            <div class="title">Postcard from Earth at the Sphere</div>
+            <div class="why">
+              This is the most uniquely modern Vegas experience. The screen surrounds you,
+              the sound is immersive, and the seats can include haptics. Seeing it on the
+              first night sets the tone for the whole trip.
+            </div>
+            <div class="pill-row small">
+              <div class="pill">Typical options: afternoon, early evening, late evening</div>
+              <div class="pill">Aim for a 7:00 pm show for this flow</div>
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">After the show</div>
+            <div class="title">Light walk and back to the hotel</div>
+            <div class="why">
+              They can stroll a bit through an attached resort, then grab a quick rideshare
+              back to the Grand Desert. Night one stays magical but not exhausting.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-header-main">
+            <div class="day-title">Day 2 — Arts District, Neon and O</div>
+            <div class="day-subtitle">Unique shops, optional Neon Museum, chef dinner, Cirque</div>
+          </div>
+          <div class="day-toggle">▾</div>
+        </div>
+        <div class="day-body">
+          <div class="slot">
+            <div class="time">Late morning, around 11:00 am</div>
+            <div class="title">Arts District, Main Street and Antique Alley</div>
+            <div class="why">
+              This is the opposite of luxury malls. Independent vintage shops, local makers,
+              art, and one of a kind finds. They can browse slowly, grab a coffee, and pick
+              up gifts that feel personal.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Early afternoon</div>
+            <div class="title">Optional Neon Museum stop</div>
+            <div class="why">
+              From the Arts District the Neon Museum is only a short hop. They can
+              walk the outdoor boneyard among classic Las Vegas signs and choose between
+              a daytime visit for clearer detail or a nighttime visit for glowing neon.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Mid afternoon</div>
+            <div class="title">Reset at the hotel</div>
+            <div class="why">
+              Back to the Wyndham for rest, showers, and getting ready. Tonight is the
+              most elegant night, so they should have time to prepare at an easy pace.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Evening</div>
+            <div class="title">Chef driven dinner and O at Bellagio</div>
+            <div class="why">
+              They start with a special dinner at Bellagio or nearby, paired with wine,
+              then walk into O, which is the most romantic and visually beautiful Cirque
+              show in town with a water stage and world class acrobatics.
+            </div>
+            <div class="pill-row small">
+              <div class="pill">Early show flow: dinner around 4:30 to 5:00, O at 6:30</div>
+              <div class="pill">Late show flow: dinner around 6:00, O at 9:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-header-main">
+            <div class="day-title">Day 3 — Fergusons, Container Park, Old Vegas, Mad Apple</div>
+            <div class="day-subtitle">Local shops, Fremont, happy hour, high energy Cirque</div>
+          </div>
+          <div class="day-toggle">▾</div>
+        </div>
+        <div class="day-body">
+          <div class="slot">
+            <div class="time">Late morning</div>
+            <div class="title">Fergusons Downtown</div>
+            <div class="why">
+              A small community block centered on local makers and small boutiques. Good
+              for jewelry, home goods, clothing, and coffee in a relaxed setting.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Midday</div>
+            <div class="title">Downtown Container Park</div>
+            <div class="why">
+              Shipping containers turned into quirky shops and eateries. Quick to walk,
+              great for photos, and easy to pair with Fremont.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Afternoon</div>
+            <div class="title">Fremont Street and Old Vegas</div>
+            <div class="why">
+              Classic Vegas lights, live entertainment, older casinos, and strong people watching.
+              This is the energetic, neon soaked part of the trip.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Late afternoon</div>
+            <div class="title">Return to hotel and refresh</div>
+            <div class="why">
+              They recharge before a social evening built around cocktails and a show.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Early evening</div>
+            <div class="title">Happy hour and small plates</div>
+            <div class="why">
+              A stylish bar or restaurant lounge gives them cocktails, wine, and bites
+              without a heavy, sit forever meal before a late show.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Night</div>
+            <div class="title">Mad Apple at New York New York</div>
+            <div class="why">
+              Mad Apple is loud, funny, and very modern. It feels like New York nightlife
+              reimagined as a Cirque show with music, comedy, and acrobatics.
+            </div>
+            <div class="pill-row small">
+              <div class="pill">Early show option: 7:00 pm</div>
+              <div class="pill">Late show option: 9:30 pm (fits best with a longer happy hour)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 4 -->
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-header-main">
+            <div class="day-title">Day 4 — Farewell brunch at Mon Ami Gabi and departure</div>
+            <div class="day-subtitle">Strip views, fountains, relaxed goodbye</div>
+          </div>
+          <div class="day-toggle">▾</div>
+        </div>
+        <div class="day-body">
+          <div class="slot">
+            <div class="time">Morning</div>
+            <div class="title">Check out and store bags</div>
+            <div class="why">
+              They check out at the Wyndham, leave bags with bell services, and move
+              to the Strip without clock stress.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">About 10:00 am to 11:15 am</div>
+            <div class="title">Brunch at Mon Ami Gabi, Paris Las Vegas</div>
+            <div class="why">
+              Outdoor French bistro style brunch facing the Bellagio fountains. This is
+              one of the most pleasant brunch settings in Vegas and fits perfectly before
+              an early afternoon flight.
+            </div>
+          </div>
+
+          <div class="slot">
+            <div class="time">Late morning</div>
+            <div class="title">Short stroll on the Strip and photos</div>
+            <div class="why">
+              They can walk a little, take final pictures, and soak in the last bit of
+              Vegas before heading to the airport.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tickets and showtimes -->
+    <section id="tickets" class="section">
+      <h2>Tickets and showtimes</h2>
+      <p>
+        This section explains where to buy tickets for the best value, plus
+        suggested showtimes and backup options for O, Mad Apple, and the Sphere.
+      </p>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">O by Cirque du Soleil (Bellagio)</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <p>
+            Where to buy:
+          </p>
+          <ul>
+            <li>Cirque du Soleil official site for O</li>
+            <li>Bellagio entertainment section</li>
+          </ul>
+          <p class="small">
+            Cirque offers a best price guarantee for its Vegas resident shows when you
+            buy directly, which usually beats third party sites once fees are included.
+          </p>
+          <h3>Typical schedule</h3>
+          <p>
+            O usually runs Wednesday through Sunday with two showtimes per night:
+          </p>
+          <ul>
+            <li>Early show around 6:30 pm</li>
+            <li>Late show around 9:00 pm</li>
+          </ul>
+          <h3>Best times for this trip</h3>
+          <p>
+            Early show flow:
+          </p>
+          <ul>
+            <li>Light but special dinner around 4:30 to 5:00 pm</li>
+            <li>Walk straight to the theatre for a 6:30 show</li>
+            <li>Optional wine or short walk around Bellagio after</li>
+          </ul>
+          <p>
+            Late show flow:
+          </p>
+          <ul>
+            <li>Relaxed dinner around 6:00 pm with full wine and dessert</li>
+            <li>O at 9:00 pm to end the night</li>
+          </ul>
+          <h3>Seat advice</h3>
+          <p class="small">
+            Aim for the middle sections, a bit back from the stage. The very front
+            can be too close to appreciate the full water stage, while the mid bowl
+            gives the most balanced view.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">Mad Apple by Cirque du Soleil (New York New York)</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <p>
+            Where to buy:
+          </p>
+          <ul>
+            <li>Cirque du Soleil official site, Mad Apple page</li>
+            <li>New York New York entertainment page</li>
+          </ul>
+          <h3>Typical schedule</h3>
+          <p>
+            Mad Apple usually plays:
+          </p>
+          <ul>
+            <li>Most nights between Tuesday and Saturday</li>
+            <li>Two showtimes: about 7:00 pm and 9:30 pm</li>
+          </ul>
+          <h3>Best times for this trip</h3>
+          <p>
+            Early show option:
+          </p>
+          <ul>
+            <li>Mad Apple at 7:00 pm</li>
+            <li>Sit down happy hour or small dinner at 5:00 pm</li>
+            <li>Free choice afterward if they want more drinks or a walk</li>
+          </ul>
+          <p>
+            Late show option:
+          </p>
+          <ul>
+            <li>Happy hour and wine around 7:00 pm</li>
+            <li>Mad Apple at 9:30 pm as the high energy cap to the night</li>
+          </ul>
+          <h3>Seat advice</h3>
+          <p class="small">
+            The theatre is built around a central stage and bar. Mid theatre seats,
+            not too far to one side, give the best look at both the stage and the
+            overall staging. Front tables feel immersive but can be very close to the action.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">Sphere – Postcard from Earth</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <p>
+            Where to buy:
+          </p>
+          <ul>
+            <li>Sphere official website, which routes into Ticketmaster for Postcard from Earth</li>
+          </ul>
+          <p class="small">
+            Buying direct gives you real time seat maps, reliable barcodes, and any
+            official promotions. Avoid random resale listings unless there is no other choice.
+          </p>
+          <h3>Typical daily time options</h3>
+          <p>
+            The Sphere commonly offers:
+          </p>
+          <ul>
+            <li>Afternoon showtimes</li>
+            <li>Early evening showtimes (for example 7:00 pm)</li>
+            <li>Later evening showtimes</li>
+          </ul>
+          <h3>Best times for this trip</h3>
+          <p>
+            Recommended for this plan:
+          </p>
+          <ul>
+            <li>Early evening around 7:00 pm after a wine focused stop at Wally’s</li>
+            <li>Or early afternoon around 4:00 pm if you want a long, drawn out evening later</li>
+          </ul>
+          <h3>Seat advice</h3>
+          <p class="small">
+            Choose mid bowl seats, not the absolute front row. You want your eyes to
+            be able to scan the full screen comfortably. Very high back rows are cheaper
+            but feel more distant. The most expensive immersive seats are not necessary
+            unless you want every possible effect.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">Getting value and avoiding overpaying</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <ul>
+            <li>Use official sites first: Cirque or hotel sites for Cirque, Sphere site for Sphere.</li>
+            <li>Check Vegas.com only for last minute deals on less full nights, if you are flexible on seats.</li>
+            <li>Same day discount booths are fine for some shows, but not ideal for headline shows you care about.</li>
+            <li>Watch for extra fees. A small discount on base price can vanish once fees are added.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brunch and dining -->
+    <section id="brunch" class="section">
+      <h2>Brunch, Mon Ami Gabi, and backups</h2>
+      <p>
+        This section focuses on the farewell brunch plus backup options, table strategy,
+        and what to order for a wine loving pair.
+      </p>
+
+      <div class="columns">
+        <div class="panel">
+          <h3>Mon Ami Gabi farewell brunch</h3>
+          <p>
+            French bistro at Paris Las Vegas, directly facing the Bellagio fountains.
+            Ideal time for their schedule is about 10:00 am on departure day.
+          </p>
+          <h3>How to book</h3>
+          <ul>
+            <li>Book a 10:00 am reservation for the departure morning through OpenTable or the Paris site.</li>
+            <li>In the notes, mention that this is a mother daughter farewell brunch and that you would love outdoor seating with a fountain view if possible.</li>
+            <li>Arrive 10 to 15 minutes early and politely ask the host for a patio table near the rail facing Bellagio.</li>
+          </ul>
+
+          <h3>Best tables to request</h3>
+          <ul>
+            <li>Patio tables, near the front rail.</li>
+            <li>Use words like “Strip view” and “Bellagio fountains” when asking.</li>
+            <li>If patio has a wait, ask about inside window tables facing the Strip as a backup.</li>
+          </ul>
+
+          <h3>What to order</h3>
+          <ul>
+            <li>French onion soup to share.</li>
+            <li>Steak frites or steak and eggs for a savory main.</li>
+            <li>Eggs Benedict or smoked salmon Benedict for a classic brunch plate.</li>
+            <li>Brioche French toast or crepes as a sweet dish to share between them.</li>
+            <li>Pastry basket if they want a drawn out coffee and conversation moment.</li>
+          </ul>
+
+          <h3>Drinks that fit their style</h3>
+          <ul>
+            <li>Chilled Sancerre or French Chardonnay for wine lovers.</li>
+            <li>Mimosas if they want “classic brunch.”</li>
+            <li>Kir Royale or French 75 for a more elegant, celebratory drink.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Backup brunch options</h3>
+          <p>
+            If Mon Ami Gabi is fully booked or weather makes the patio less fun, these
+            are excellent backups that still feel special.
+          </p>
+
+          <h3>Sadelle’s at Bellagio</h3>
+          <ul>
+            <li>Overlooks the Bellagio Conservatory.</li>
+            <li>Brunch style menu with bagel towers, French toast, and brunch cocktails.</li>
+            <li>Ask for a table by the windows facing the Conservatory.</li>
+          </ul>
+
+          <h3>Bouchon at the Venetian</h3>
+          <ul>
+            <li>Thomas Keller French bistro, often rated among the best brunches in town.</li>
+            <li>Crab Benedict, pastries, and very good wine list.</li>
+            <li>Request patio or window seating overlooking the quiet courtyard.</li>
+          </ul>
+
+          <h3>More casual backup</h3>
+          <ul>
+            <li>Poolside cafe or a lighter brunch spot if they are more focused on the flight than a big meal.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spa -->
+    <section id="spa" class="section">
+      <h2>Spa services and discounts</h2>
+      <p>
+        The idea here is good quality relaxation without the steepest Strip spa prices.
+        Prices and promos change constantly, but these patterns are reliable.
+      </p>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">Realistic spa choices with better value</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <h3>The Spa at the Linq</h3>
+          <p>
+            Often one of the better deals on the Strip. Look for weekday massage or facial
+            promotions on Vegas deal sites. Facilities are modern and simple, good for a
+            practical reset.
+          </p>
+
+          <h3>Sahara Las Vegas spa</h3>
+          <p>
+            Frequently offers weekday or off peak specials for massage and body treatments.
+            Good if they want a more modern feel without luxury pricing.
+          </p>
+
+          <h3>Treasure Island spa</h3>
+          <p>
+            A more affordable Strip spa that still has proper locker rooms and relaxation areas.
+          </p>
+
+          <h3>JW Marriott Spa Aquae (off Strip)</h3>
+          <p>
+            Off Strip but known for its hydrotherapy pools and seasonal specials. A great choice
+            if they want a quiet, resort like spa day away from the casino environment.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">How to hunt for discounts without wasting time</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <ul>
+            <li>Check Vegas deal sites for “spa day,” “massage,” and “facial” a week or two before the trip.</li>
+            <li>Search specifically for Linq, Sahara, Treasure Island, and off Strip resorts like JW Marriott.</li>
+            <li>Check resort websites directly for weekday or locals style promotions.</li>
+            <li>If they only want sauna and hot tub, ask about a “spa day pass” at high end properties. Sometimes a facility pass is cheaper than a treatment.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Neon Museum and maps -->
+    <section id="neon" class="section">
+      <h2>Neon Museum and how it fits</h2>
+      <p>
+        The Neon Museum is an outdoor collection of classic Las Vegas signs. It pairs perfectly
+        with time in the Arts District and Old Vegas.
+      </p>
+
+      <h3>Location</h3>
+      <p>
+        Address: 770 Las Vegas Boulevard North.
+      </p>
+      <p>
+        Rough distances:
+      </p>
+      <ul>
+        <li>From Club Wyndham Grand Desert: about 10 to 12 minutes by rideshare.</li>
+        <li>From the Arts District: about 5 to 7 minutes by rideshare.</li>
+        <li>From Fremont Street: about a 3 to 4 minute rideshare, or a moderate walk when the weather is comfortable.</li>
+        <li>From central Strip (Bellagio or Paris): about 15 to 18 minutes by rideshare.</li>
+      </ul>
+
+      <h3>Best timing relative to the itinerary</h3>
+      <p>
+        Option one:
+      </p>
+      <ul>
+        <li>After the Arts District shopping on Day 2.</li>
+        <li>Rideshare a short distance to the Neon Museum.</li>
+        <li>Move from there back to the hotel to get ready for the O night.</li>
+      </ul>
+
+      <p>
+        Option two:
+      </p>
+      <ul>
+        <li>On the Fremont and Old Vegas day, between Container Park and Fremont Street.</li>
+        <li>You would go Container Park to Neon Museum to Fremont in one smooth loop.</li>
+      </ul>
+
+      <h3>Daytime versus nighttime</h3>
+      <ul>
+        <li>Daytime: better for seeing details of each sign, and less dependence on weather when you have a tight show schedule.</li>
+        <li>Nighttime: the signs that are wired light up and give you the classic neon glow experience.</li>
+      </ul>
+
+      <p class="small">
+        Most visits last 45 to 60 minutes for a self guided walk, or around 90 minutes if
+        you add a guided or enhanced nighttime option.
+      </p>
+    </section>
+
+    <!-- Extras -->
+    <section id="extras" class="section">
+      <h2>Unique add ons and memory makers</h2>
+      <p>
+        These are additional experiences that fit their vibe: visual, a little romantic, and
+        not trashy.
+      </p>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">Classic sights and free experiences</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <h3>Bellagio Conservatory</h3>
+          <p>
+            Elaborate seasonal floral displays. Completely free, easy to walk through before
+            or after O, or after brunch at Sadelle’s if they use a backup.
+          </p>
+
+          <h3>Bellagio fountains</h3>
+          <p>
+            Mon Ami Gabi’s patio faces them, but they can also stand along the rail outside
+            Bellagio in the evening for a more up close view.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">Viewpoints and lounges</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <h3>Eiffel Tower viewing deck at Paris</h3>
+          <p>
+            A high view of the Strip and Bellagio fountains. Best at sunset or after dark.
+          </p>
+
+          <h3>Skyfall Lounge at Delano</h3>
+          <p>
+            A cocktail lounge with one of the best panoramic views of the Strip. Good for a
+            post show drink if they are not too tired.
+          </p>
+
+          <h3>High tea at Waldorf Astoria</h3>
+          <p>
+            Very refined tea service with views, perfect if they want a quiet, elegant hour
+            instead of another casino session.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <span class="label">Art, wine and off Strip gems</span>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <h3>Area15</h3>
+          <p>
+            Immersive art and experiences. Museum of illusions, art installations, bars, and
+            other attractions. Easy to fit into a free afternoon if they want something surreal.
+          </p>
+
+          <h3>Marche Bacchus</h3>
+          <p>
+            Lakeside wine bistro off Strip. Wine flights, French food, and a much calmer
+            atmosphere if they want a change from casino spaces.
+          </p>
+
+          <h3>Seven Magic Mountains</h3>
+          <p>
+            Colorful boulder stacks in the desert south of town. Great for photos.
+            Best in early morning or near sunset when the light is soft.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Navigation switching
+  const navButtons = document.querySelectorAll(".nav-btn");
+  const sections = document.querySelectorAll(".section");
+
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      navButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const targetId = btn.getAttribute("data-target");
+      sections.forEach(sec => {
+        sec.classList.toggle("active", sec.id === targetId);
+      });
+    });
+  });
+
+  // Day card toggles
+  const dayCards = document.querySelectorAll(".day-card");
+  dayCards.forEach(card => {
+    const header = card.querySelector(".day-header");
+    const body = card.querySelector(".day-body");
+    const toggleIcon = card.querySelector(".day-toggle");
+    header.addEventListener("click", () => {
+      const isOpen = body.classList.contains("open");
+      body.classList.toggle("open", !isOpen);
+      toggleIcon.textContent = isOpen ? "▾" : "▴";
+    });
+  });
+
+  // Accordion toggles
+  const accordions = document.querySelectorAll(".accordion");
+  accordions.forEach(acc => {
+    const header = acc.querySelector(".accordion-header");
+    const body = acc.querySelector(".accordion-body");
+    const chevron = acc.querySelector(".chevron");
+    header.addEventListener("click", () => {
+      const isOpen = body.classList.contains("open");
+      body.classList.toggle("open", !isOpen);
+      chevron.textContent = isOpen ? "▾" : "▴";
+    });
+  });
+</script>
+</body>
+</html>
